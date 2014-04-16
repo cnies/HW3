@@ -103,11 +103,98 @@ element to the element to search for. Therefore, each node takes about 3 steps,
 and with n nodes, to search would take roughly 3n steps. 3n = Omega(n)
 
 Part 3
+Question 1.
+A. A UNIX command one could use to get the number of words in a file is wc -w,
+which will return the number of words in a file followed by the filename. 
+119805 medium-wordlist.txt
+Another (weirder) way to do it would be with the "cat -n" command and read the
+last numbered line, but that's just weird.
 
+B.
+main()
 
+  doLoops(MyLinkedList, wordlist, input file, loop bounds and steps)
+    <Set up the table by printing the top bar, to make it look nice>
+    <Loop the next method call by the number of times indicated by steps, 
+    and increase the number of words to look through by incrementing it by
+    increment each time>
 
+      doWork(MyLinkedList, wordlist, input file, amount of words to read, number
+       of times to read it)
+        <Clear MyLinkedList>
+        <Do the following for the number of reps indicated in the parameters, 
+        keeping track of totalTime elapsed spent on the work>
+          <Add every word in "wordlist" into the cleared MyLinkedList>
+          <Create two hashsets to keep track of the good and bad words>
+          <Open the Scanner, read through every word in the input file (up to 
+          the number of words specified)>
+            <trim it's punctuation with the static method "trim>
+          <Check the MyLinkedList to see if it contains the word the Scanner i
+          just read> 
+          <If the word is in the List, add it to the "goodwords" HashSet, 
+          otherwise add it to "badwords" and 
+          increment their respective counters>
+          <Once the document is done being read up to the amount of words, get 
+          the elapsed time and add it to totalTime>
+          <Repeat until done the specified amount of time>
+        <One it is all done, take the average trial time, and return it>i
 
+     <Display the result of the "doWork" test, and repeat with a larger amount 
+     of words> 
+       
+  doLoops(MRUList, wordlist, input file, loop bounds and steps)
+    <Same Call Outline As Above, only with the new type of LinkedList>
+      doWork(MRUListm wordlist, input file, amount of words to read, number of 
+      times to read it)
+        trimPunctuation(word to strip)
 
+C.
+HashSet is a class in the Java library in the java.util package, and it 
+implements the "Set" interface. 
+"good" differs from "goodwords.size()" in the sense that good keeps track of the
+number of good words in the file (including 
+repeats), whereas (since goodwords is a Set, and does not allow repeats) 
+goodWords.size() is the number of unique goodwords in the file,
+ignoring how many times a particular good word is repeated.
+
+D.
+To hazard a guess, the fact that the small-wordlist is sorted i
+semi-alphabetically might have a tiny bit of difference, at least in the 
+MyLinkedList case. The reason being is that the letter 'a' is one of the most 
+common letters in the english language to start off a word. Though, coming in 
+first place is the letter 't', which is a fair distance down in the alphabet, so
+this may not have any effect at all. This is assuming that the list does 
+not use any form of binary search (it doesn't, since I wrote it), in which case 
+the sorting would be significant.
+
+Question 2
+Wordlist: small-wordlist.txt  Document: pride-and-prejudice.txt
+Class: MyLinkedList
+=======================================
+  1:    5000 words in     396 milliseconds
+  2:   10000 words in     767 milliseconds
+  3:   15000 words in    1100 milliseconds
+  4:   20000 words in    1326 milliseconds
+  5:   25000 words in    1571 milliseconds
+
+Wordlist: small-wordlist.txt  Document: pride-and-prejudice.txt
+Class: MRUList
+=======================================
+  1:    5000 words in     195 milliseconds
+  2:   10000 words in     250 milliseconds
+  3:   15000 words in     377 milliseconds
+  4:   20000 words in     496 milliseconds
+  5:   25000 words in     647 milliseconds
+
+Question 3
+For both lists, doubling the amount of words read did roughly double the
+amount of time because the growth rate is roughly linear. At first I
+believed that the MRUList time would be quicker than twice the time when
+the amount to read was doubled, because it was kind of a "smart list" that
+makes more common words more accessible. But then I realized that, in terms of
+finding and utilizing the common words, there is hardly a difference between 
+5000 words and 10000 words, so while using common words cuts down total time,
+it does not change how the algorithm scales with time.
 
 
 
