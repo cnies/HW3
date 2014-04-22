@@ -14,10 +14,10 @@ public class CollectionTimer {
   private static final int NUMWORDS = 5000;
   private static final int INCREMENT = 5000;
   private static final int STEPS = 5;
-  private static final int NUM_REPS = 5;
+  private static final int NUM_REPS = 3;
   
   // set this to true to see some internal counts and status updates
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
   
   public static void main(String[] args) {
     
@@ -225,7 +225,7 @@ public class CollectionTimer {
       totalTime += (end - start);
     }
     if (DEBUG) {
-      System.out.printf("Good words: %5d (%5d unique)  Incorrect words: %5d (%5d unique)\n",
+      System.out.printf("Good words: %5d (%5d unique)  Incorrect words: %5`d (%5d unique)\n",
                         good, goodwords.size(), bad, badwords.size());
     }
     return totalTime / reps;
