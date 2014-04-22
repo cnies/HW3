@@ -197,8 +197,58 @@ finding and utilizing the common words, there is hardly a difference between
 it does not change how the algorithm scales with time.
 
 Question 4
+[cs12sfl@ieng6-202]:HW3:219$ java CollectionTimer medium-wordlist.txt pride-and-prejudice.txt 2500 1250 4
+Wordlist: medium-wordlist.txt  Document: pride-and-prejudice.txt
+Class: MyLinkedList
+=======================================
+  1:    2500 words in    8593 milliseconds
+  2:    3750 words in   14459 milliseconds
+  3:    5000 words in   19187 milliseconds
+  4:    6250 words in   25940 milliseconds
 
+Wordlist: medium-wordlist.txt  Document: pride-and-prejudice.txt
+Class: MRUList
+=======================================
+  1:    2500 words in    1949 milliseconds
+  2:    3750 words in    2866 milliseconds
+  3:    5000 words in    7926 milliseconds
+  4:    6250 words in    9470 milliseconds
 
+Yes, as expected the increase in the size of the word list greatly effects the
+real-time performance of the program, because it means that the worst case
+(where the word is a "bad word") is about ten times as long as before. As before,
+the MRUList performs much faster due to its ability to  quickly access the more
+common words.
+
+Question 5
+Wordlist: pride-and-prejudice.txt  Document: pride-and-prejudice.txt
+Class: MyLinkedList
+=======================================
+  1:    2500 words in     831 milliseconds
+  2:    3750 words in    1441 milliseconds
+  3:    5000 words in    1701 milliseconds
+  4:    6250 words in    2096 milliseconds
+
+Wordlist: pride-and-prejudice.txt  Document: pride-and-prejudice.txt
+Class: MRUList
+=======================================
+  1:    2500 words in     705 milliseconds
+  2:    3750 words in    1182 milliseconds
+  3:    5000 words in    1599 milliseconds
+  4:    6250 words in    1842 milliseconds
+
+I did a few runs of this, and every time the MRUList and MyLinkedList were
+actually closer together than most of the other run throughs, even to the point
+that the MRUList was occasionally slower. My best guess for as to why would be
+that, since all the words are in the exact same place, that the algorithm in
+a regular linked list is extremely quick, since the amount it has to search (at most)
+increases by one each time. This makes the MyLinkedList really quick for the 
+first part of this list. As for why the MRUList is closer to the MyLinkedList
+it's probably because, despite all of the common word being accessible, 
+every uncommon word is pushed further away with each successive time, which means that in
+these cases it is actually slower than the MyLinkedList. As time goes on though, and 
+more and more words become processed, the MRUList once again proves much faster due to
+it's quick access of the common words.
 
 
 
