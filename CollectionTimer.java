@@ -14,7 +14,7 @@ public class CollectionTimer {
   private static final int NUMWORDS = 5000;
   private static final int INCREMENT = 5000;
   private static final int STEPS = 5;
-  private static final int NUM_REPS = 3;
+  private static final int NUM_REPS = 5;
   
   // set this to true to see some internal counts and status updates
   private static final boolean DEBUG = false;
@@ -48,26 +48,19 @@ public class CollectionTimer {
     if (args.length >= 6 ) {
       reps = Integer.parseInt(args[5]);
     }
-    
-    // we'll be putting one of our ADTs here and then testing
-    Collection<String> storage;
-    
-    // Once for the MyLinkedList
-    storage = new MyLinkedList<String>();
-    doLoops(storage, wordlist, document, numwords, increment, steps, reps);
+        
+    // Once times for the MyLinkedList
+    doLoops("MyLinkedList", wordlist, document, numwords, increment, steps, reps);
     
     // Once for MRUList
-    storage = new MRUList<String>();
-    doLoops(storage, wordlist, document, numwords, increment, steps, reps);
+    doLoops("MRUList", wordlist, document, numwords, increment, steps, reps);
     
     
     // If you have time, you can try against Java's LinkedList
-    //storage = new LinkedList<String>();
-    //doLoops(storage, wordlist, document, numwords, increment, steps, reps);
+    //doLoops("LinkedList", wordlist, document, numwords, increment, steps, reps);
     
     // If you have time, you can try against Java's ArrayList
-    //storage = new ArrayList<String>();
-    //doLoops(storage, wordlist, document, numwords, increment, steps, reps);
+    //doLoops("ArrayList", wordlist, document, numwords, increment, steps, reps);
     
   }
   
@@ -101,17 +94,40 @@ public class CollectionTimer {
    * @param increment amount to increase numwords by each time
    * @param steps number of steps to perform
    */
-  private static void doLoops(Collection<String> storage, String wordlist,
+  private static void doLoops(String storageType, String wordlist,
                               String document, int numwords, int increment, int steps,
                               int reps) {
     
-    System.out.printf("Wordlist: %s  Document: %s\nClass: %s\n", wordlist, document, storage.getClass().getCanonicalName());
+    Collection<String> storage;
+    System.out.printf("Wordlist: %s  Document: %s\nClass: %s\n", wordlist, document, storageType);
     System.out.println("=======================================");
     for (int i = 1; i <= steps; i++) {
-      // do the work and keep track of the running time
-      long runtime;
-      runtime = doWork(storage, wordlist, document, numwords, reps);
-      
+      // Reset the data structure
+      long totalTime = 0;
+      for ( int r = 0; r < reps; r++ ) {
+        if ( storageType.equals( "MyLinkedList" ) ) {
+          storage = new MyLinkedList<String>();
+        }
+        else if ( storageType.equals( "MRUList" ) ) {
+          storage = new MRUList<String>();
+        }
+        else if ( storageType.equals( "LinkedList" ) ) {
+          storage = new LinkedList<String>();
+        }
+        else if ( storageType.equals( "ArrayList" ) ) {
+          storage = new ArrayList<String>();
+        }
+        else {
+          throw new IllegalArgumentException( "Cannot instantiate storage of type " + storageType );
+        }
+        if (DEBUG) {
+          System.out.println( "REP " + r + ": " );
+        }
+        // do the work and keep track of the running time
+        totalTime += doWork(storage, wordlist, document, numwords);
+      }
+      long runtime = totalTime / reps;
+     
       // print the results in a table
       System.out.printf("%3d: %7d words in %7d milliseconds\n", i, numwords, runtime );
       
@@ -120,6 +136,32 @@ public class CollectionTimer {
     }
     System.out.println();
   }
+  
+  private static void readDictionary( Collection<String> items, String wordlist ) throws IOException
+  {
+    // read in the dictionary    
+    FileInputStream in = new FileInputStream(wordlist);
+    BufferedReader br = new BufferedReader(new InputStreamReader(in));
+    String strLine;
+    
+    // make sure we are ready to go
+    items.clear();
+    
+    String line;
+    // read in the dictionary
+    while((line = br.readLine())!= null)
+    {
+      String[] arr = line.split( " " );
+      for ( String word : arr ) {
+        word = CollectionTimer.trimPunctuation(word);
+        items.add(word);
+      }
+    }
+      
+    
+    
+  }
+  
   /**
    * Do a simple "spell-check" to exercise lookups from a Collection.
    * 
@@ -130,32 +172,15 @@ public class CollectionTimer {
    * @return number of milliseconds taken to check numwords from document against wordlist
    */
   private static long doWork(Collection<String> items, String wordlist,
-                             String document, int numwords, int reps) {
+                             String document, int numwords) {
     long start, end;
     
-    // read in the dictionary    
     try {
-      FileInputStream in = new FileInputStream(wordlist);
-      BufferedReader br = new BufferedReader(new InputStreamReader(in));
-      String strLine;
- 
-      // make sure we are ready to go
-      items.clear();
-      
-      String word;
-      // read in the dictionary
-      while((word = br.readLine())!= null)
-      {
-        word = CollectionTimer.trimPunctuation(word);
-        items.add(word);
-      }
-      
+      readDictionary( items, wordlist );
     } catch (IOException e) {
       System.out.println("problem reading from wordlist:" + e.getMessage());
       return 0;
     }
-    
-    
     
     if (DEBUG) {
       System.out.println(items.getClass() + " wordlist size: " + items.size());
@@ -177,10 +202,7 @@ public class CollectionTimer {
     // get the start time
     long totalTime = 0;
     
-    for ( int rep = 0; rep < reps; rep++ ) {
-      if (DEBUG) {
-        System.out.println( "REP " + rep + ": " );
-      }
+      
       // open up the document
       Scanner input;
       try {
@@ -221,14 +243,15 @@ public class CollectionTimer {
       
       // get the end time 
       end = System.currentTimeMillis();
-      // return the number of milliseconds elapsed
-      totalTime += (end - start);
-    }
+      // count the number of milliseconds elapsed
+      totalTime += ( end-start );
+      
     if (DEBUG) {
-      System.out.printf("Good words: %5d (%5d unique)  Incorrect words: %5`d (%5d unique)\n",
+      System.out.printf("Good words: %5d (%5d unique)  Incorrect words: %5d (%5d unique)\n",
                         good, goodwords.size(), bad, badwords.size());
     }
-    return totalTime / reps;
+    
+    return totalTime;
     
   }
   

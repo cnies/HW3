@@ -220,7 +220,7 @@ real-time performance of the program, because it means that the worst case
 the MRUList performs much faster due to its ability to  quickly access the more
 common words.
 
-Question 5
+Question 5 <Pre-Bug-Discovery>
 Wordlist: pride-and-prejudice.txt  Document: pride-and-prejudice.txt
 Class: MyLinkedList
 =======================================
@@ -245,10 +245,18 @@ a regular linked list is extremely quick, since the amount it has to search (at 
 increases by one each time. This makes the MyLinkedList really quick for the 
 first part of this list. As for why the MRUList is closer to the MyLinkedList
 it's probably because, despite all of the common word being accessible, 
-every uncommon word is pushed further away with each successive time, which means that in
-these cases it is actually slower than the MyLinkedList. As time goes on though, and 
-more and more words become processed, the MRUList once again proves much faster due to
-it's quick access of the common words.
+every uncommon word is pushed further away with each successive time, which
+means that in these cases it is actually slower than the MyLinkedList. As time
+goes on though, and more and more words become processed, the MRUList once again
+proves much faster due to it's quick access of the common words.
+
+
+Question 5
+<Post Bug Fix>
+
+Since the wordlist implementation assumes each word has it's own line, every "word" in
+the dictionary is actually a line. This means that every comparison is a miss,
+since a word can never equal a full line
 
 
 
