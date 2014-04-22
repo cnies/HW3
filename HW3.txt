@@ -220,7 +220,8 @@ real-time performance of the program, because it means that the worst case
 the MRUList performs much faster due to its ability to  quickly access the more
 common words.
 
-Question 5 <Pre-Bug-Discovery>
+Question 5
+<Pre-Bug-Discovery>
 Wordlist: pride-and-prejudice.txt  Document: pride-and-prejudice.txt
 Class: MyLinkedList
 =======================================
@@ -237,26 +238,46 @@ Class: MRUList
   3:    5000 words in    1599 milliseconds
   4:    6250 words in    1842 milliseconds
 
+<Post-Bug-Fix>
+Class: MyLinkedList
+=======================================
+  1:    2500 words in     950 milliseconds
+  2:    3750 words in    1644 milliseconds
+  3:    5000 words in    1848 milliseconds
+  4:    6250 words in    2355 milliseconds
+
+Wordlist: pride-and-prejudice.txt  Document: pride-and-prejudice.txt
+Class: MRUList
+=======================================
+  1:    2500 words in    1196 milliseconds
+  2:    3750 words in    1181 milliseconds
+  3:    5000 words in    1578 milliseconds
+  4:    6250 words in    2292 milliseconds
+
+
 I did a few runs of this, and every time the MRUList and MyLinkedList were
 actually closer together than most of the other run throughs, even to the point
 that the MRUList was occasionally slower. My best guess for as to why would be
 that, since all the words are in the exact same place, that the algorithm in
 a regular linked list is extremely quick, since the amount it has to search (at most)
 increases by one each time. This makes the MyLinkedList really quick for the 
-first part of this list. As for why the MRUList is closer to the MyLinkedList
-it's probably because, despite all of the common word being accessible, 
-every uncommon word is pushed further away with each successive time, which
+first part of this list. As for why the MRUList is slower than the MyLinkedList at first
+it's probably because, despite all of the common words being quick;y accessible, 
+every uncommon word is pushed further away with each successive search, which
 means that in these cases it is actually slower than the MyLinkedList. As time
 goes on though, and more and more words become processed, the MRUList once again
 proves much faster due to it's quick access of the common words.
 
 
-Question 5
 <Post Bug Fix>
 
 Since the wordlist implementation assumes each word has it's own line, every "word" in
 the dictionary is actually a line. This means that every comparison is a miss,
-since a word can never equal a full line
+since a word can never equal a full line, which is why things were initially so close
+together. Both lists had to be traversed in its entirety for every word they check,
+so that is why they were so close. However, my guess above still applies with the
+new data, since MyLinkedList is actually faster than MRUList for the first 2500
+words.
 
 
 
