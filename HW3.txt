@@ -239,34 +239,35 @@ Class: MRUList
   4:    6250 words in    1842 milliseconds
 
 <Post-Bug-Fix>
+Wordlist: pride-and-prejudice.txt  Document: pride-and-prejudice.txt
 Class: MyLinkedList
 =======================================
-  1:    2500 words in     950 milliseconds
-  2:    3750 words in    1644 milliseconds
-  3:    5000 words in    1848 milliseconds
-  4:    6250 words in    2355 milliseconds
+  1:    2500 words in      48 milliseconds
+  2:    3750 words in      45 milliseconds
+  3:    5000 words in      69 milliseconds
+  4:    6250 words in     113 milliseconds
 
 Wordlist: pride-and-prejudice.txt  Document: pride-and-prejudice.txt
 Class: MRUList
 =======================================
-  1:    2500 words in    1196 milliseconds
-  2:    3750 words in    1181 milliseconds
-  3:    5000 words in    1578 milliseconds
-  4:    6250 words in    2292 milliseconds
+  1:    2500 words in    1558 milliseconds
+  2:    3750 words in    2069 milliseconds
+  3:    5000 words in    2519 milliseconds
+  4:    6250 words in    4322 milliseconds
 
 
-I did a few runs of this, and every time the MRUList and MyLinkedList were
-actually closer together than most of the other run throughs, even to the point
-that the MRUList was occasionally slower. My best guess for as to why would be
+
+I did a few runs of this, and every time the MRUList significantly slower 
+than most of the other run throughs with MyLinkedList. My best guess for 
+as to why would be
 that, since all the words are in the exact same place, that the algorithm in
 a regular linked list is extremely quick, since the amount it has to search (at most)
 increases by one each time. This makes the MyLinkedList really quick for the 
 first part of this list. As for why the MRUList is slower than the MyLinkedList at first
-it's probably because, despite all of the common words being quick;y accessible, 
+it's probably because, despite all of the common words being quickly accessible, 
 every uncommon word is pushed further away with each successive search, which
-means that in these cases it is actually slower than the MyLinkedList. As time
-goes on though, and more and more words become processed, the MRUList once again
-proves much faster due to it's quick access of the common words.
+means that in these cases it is actually slower than the MyLinkedList, quite 
+significantly.
 
 
 <Post Bug Fix>
